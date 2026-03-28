@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CourseCard from '../components/CourseCard.astro';
+import { getCollection } from 'astro:content';
+
+const courses = (await getCollection('courses')).sort((a, b) => a.data.order - b.data.order);
+const lessons = await getCollection('lessons');
+
+const lessonCounts = new Map<string, number>();
+for (const lesson of lessons) {
+  lessonCounts.set(lesson.data.course, (lessonCounts.get(lesson.data.course) || 0) + 1);
+}
+
+const totalLessons = lessons.length;
+---
+
+<Layout title="Room — เรียนเทรดฟรี | IntensiveTrader">
+  <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Hero -->
+      <div class="text-center mb-10">
+        <h1 class="text-[28px] lg:text-4xl font-extrabold text-gray-light mb-3 leading-tight">
+          เรียนเทรดฟรี<br><span class="text-secondary">จากประสบการณ์จริง</span>
+        </h1>
+        <p class="text-gray text-base max-w-lg mx-auto leading-relaxed">
+          คอร์สสำหรับมือใหม่ที่อยากเริ่มเทรด Forex อย่างถูกวิธี ไม่มีค่าใช้จ่าย ไม่มีเงื่อนไข
+        </p>
+        <p class="text-gray-dark text-sm mt-2">
+          <strong class="text-secondary">{courses.length}</strong> คอร์ส &bull;
+          <strong class="text-secondary">{totalLessons}</strong> บทเรียน &bull; ฟรีทั้งหมด
+        </p>
+      </div>
+
+      <!-- Filter -->
+      <div class="flex gap-2 mb-8 justify-center" id="course-filter">
+        <button data-filter="all" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-primary text-white cursor-pointer">
+          ทั้งหมด
+        </button>
+        <button data-filter="learn" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-dark-card text-gray border border-dark-border hover:border-primary cursor-pointer">
+          คอร์สเรียน
+        </button>
+        <button data-filter="learn-tool" class="filter-btn px-4 py-2 rounded-full text-sm font-medium transition-colors bg-dark-card text-gray border border-dark-border hover:border-primary cursor-pointer">
+          เครื่องมือ
+        </button>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="course-grid">
+        {courses.map(course => (
+          <div data-course-type={course.data.courseType}>
+            <CourseCard
+              slug={course.id}
+              title={course.data.title}
+              description={course.data.description}
+              courseType={course.data.courseType}
+              thumbnail={course.data.thumbnail}
+              lessonCount={lessonCounts.get(course.id) || 0}
+              tags={course.data.tags}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const courseCards = document.querySelectorAll('#course-grid > div');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+      filterBtns.forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('bg-dark-card', 'text-gray', 'border', 'border-dark-border');
+      });
+      btn.classList.remove('bg-dark-card', 'text-gray', 'border', 'border-dark-border');
+      btn.classList.add('bg-primary', 'text-white');
+      courseCards.forEach(card => {
+        const type = card.getAttribute('data-course-type');
+        (card as HTMLElement).style.display = (filter === 'all' || type === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>

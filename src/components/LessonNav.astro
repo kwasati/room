@@ -1,0 +1,72 @@
+---
+interface Lesson { id: string; title: string; duration?: string; }
+interface Props {
+  courseSlug: string;
+  courseTitle: string;
+  lessons: Lesson[];
+  currentLessonSlug: string;
+}
+const { courseSlug, courseTitle, lessons, currentLessonSlug } = Astro.props;
+---
+
+<!-- Desktop sidebar -->
+<aside class="hidden lg:block w-72 flex-shrink-0">
+  <div class="sticky top-16">
+    <div class="bg-dark-card border border-dark-border rounded-xl overflow-hidden">
+      <div class="p-3 border-b border-dark-border">
+        <a href={`/${courseSlug}`} class="text-sm text-gray hover:text-primary transition-colors">← {courseTitle}</a>
+      </div>
+      <nav class="p-1.5">
+        {lessons.map((lesson, i) => {
+          const isActive = lesson.id === currentLessonSlug;
+          return (
+            <a href={`/${courseSlug}/${lesson.id}`}
+               class:list={['flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors',
+                 isActive ? 'bg-primary/10 text-primary' : 'text-gray hover:text-gray-light hover:bg-dark']}>
+              <span class:list={['flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] border',
+                isActive ? 'border-primary text-primary' : 'border-dark-border text-gray-dark']}>
+                {i + 1}
+              </span>
+              <span class="truncate">{lesson.title}</span>
+            </a>
+          );
+        })}
+      </nav>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile toggle -->
+<div class="lg:hidden mb-4">
+  <button id="lesson-nav-toggle"
+    class="w-full flex items-center gap-2 px-4 py-2.5 bg-dark-card border border-dark-border rounded-lg text-sm text-gray cursor-pointer">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+    <span>สารบัญ — บทที่ {lessons.findIndex(l => l.id === currentLessonSlug) + 1} / {lessons.length}</span>
+  </button>
+  <div id="lesson-nav-mobile" class="hidden mt-2 bg-dark-card border border-dark-border rounded-xl overflow-hidden">
+    <nav class="p-1.5">
+      {lessons.map((lesson, i) => {
+        const isActive = lesson.id === currentLessonSlug;
+        return (
+          <a href={`/${courseSlug}/${lesson.id}`}
+             class:list={['flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors',
+               isActive ? 'bg-primary/10 text-primary' : 'text-gray hover:text-gray-light hover:bg-dark']}>
+            <span class:list={['flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] border',
+              isActive ? 'border-primary text-primary' : 'border-dark-border text-gray-dark']}>
+              {i + 1}
+            </span>
+            <span class="truncate">{lesson.title}</span>
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+</div>
+
+<script>
+  document.getElementById('lesson-nav-toggle')?.addEventListener('click', () => {
+    document.getElementById('lesson-nav-mobile')?.classList.toggle('hidden');
+  });
+</script>

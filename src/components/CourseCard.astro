@@ -1,0 +1,50 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  courseType: 'learn' | 'learn-tool';
+  thumbnail?: string;
+  lessonCount: number;
+  tags?: string[];
+}
+
+const { slug, title, description, courseType, thumbnail, lessonCount, tags = [] } = Astro.props;
+const typeLabel = courseType === 'learn-tool' ? 'เครื่องมือ' : 'คอร์สเรียน';
+const typeBadgeClass = courseType === 'learn-tool'
+  ? 'bg-secondary/15 text-secondary'
+  : 'bg-primary/15 text-primary-light';
+---
+
+<a href={`/${slug}`} class="group block bg-dark-card rounded-xl border border-dark-border hover:border-primary transition-all hover:-translate-y-0.5 overflow-hidden cursor-pointer">
+  {thumbnail ? (
+    <div class="aspect-video bg-dark overflow-hidden">
+      <img src={thumbnail} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+    </div>
+  ) : (
+    <div class="aspect-video bg-[#111] flex items-center justify-center relative">
+      <svg class="w-12 h-12 text-gray-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="absolute top-2 right-2 bg-green text-black text-[11px] font-bold px-2 py-0.5 rounded">FREE</span>
+    </div>
+  )}
+  <div class="p-4">
+    <div class="flex items-center gap-2 mb-2">
+      <span class={`text-[11px] font-semibold px-2 py-0.5 rounded ${typeBadgeClass}`}>{typeLabel}</span>
+      <span class="text-xs text-gray-dark">{lessonCount} บท</span>
+    </div>
+    <h3 class="font-bold text-gray-light group-hover:text-primary transition-colors leading-snug">
+      {title}
+    </h3>
+    <p class="text-sm text-gray line-clamp-2 mt-1">{description}</p>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-1.5 mt-3">
+        {tags.map(tag => (
+          <span class="text-[11px] text-gray-dark bg-dark px-2 py-0.5 rounded">{tag}</span>
+        ))}
+      </div>
+    )}
+  </div>
+</a>

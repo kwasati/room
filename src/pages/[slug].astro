@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BrokerCTA from '../components/BrokerCTA.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const courses = await getCollection('courses');
+  return courses.map(c => ({ params: { slug: c.id } }));
+}
+
+const { slug } = Astro.params;
+const courses = await getCollection('courses');
+const course = courses.find(c => c.id === slug);
+if (!course) return Astro.redirect('/');
+
+const lessons = (await getCollection('lessons'))
+  .filter(l => l.data.course === slug)
+  .sort((a, b) => a.data.order - b.data.order);
+
+if (lessons.length === 1) {
+  return Astro.redirect(`/${slug}/${lessons[0].id.split('/').pop()}`);
+}
+---
+
+<Layout title={`${course.data.title} | Room`} description={course.data.description} ogImage={course.data.thumbnail}>
+  <section class="py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="mb-6">
+        <ol class="flex items-center gap-2 text-sm text-gray flex-wrap">
+          <li><a href="/" class="hover:text-primary transition-colors">Room</a></li>
+          <li class="text-gray-dark">/</li>
+          <li class="text-gray-light">{course.data.title}</li>
+        </ol>
+      </nav>
+
+      <div class="lg:grid lg:grid-cols-3 lg:gap-8">
+        <div class="lg:col-span-2">
+          <h1 class="text-2xl lg:text-3xl font-extrabold text-gray-light mb-3 leading-tight">{course.data.title}</h1>
+          <p class="text-gray text-base leading-relaxed mb-8">{course.data.description}</p>
+
+          <p class="text-xs text-gray-dark uppercase tracking-widest mb-3">{lessons.length} บทเรียน</p>
+
+          <div class="space-y-2">
+            {lessons.map((lesson, i) => (
+              <a href={`/${slug}/${lesson.id.split('/').pop()}`}
+                 class="flex items-center gap-3 bg-dark-card border border-dark-border rounded-lg p-4 hover:border-primary transition-colors group cursor-pointer">
+                <span class="flex-shrink-0 w-8 h-8 rounded-full border border-dark-border flex items-center justify-center text-sm text-gray-dark group-hover:border-primary group-hover:text-primary transition-colors">
+                  {i + 1}
+                </span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-gray-light font-medium group-hover:text-primary transition-colors">{lesson.data.title}</p>
+                  {lesson.data.duration && <p class="text-xs text-gray-dark mt-0.5">{lesson.data.duration}</p>}
+                </div>
+                <svg class="w-5 h-5 text-gray-dark group-hover:text-primary transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <aside class="hidden lg:block">
+          <div class="sticky top-16 space-y-3">
+            <div class="bg-dark-card border border-dark-border rounded-xl p-5">
+              <p class="text-sm text-gray-dark mb-1">คอร์สฟรี</p>
+              <p class="text-xl font-bold text-gray-light mb-4">{lessons.length} บทเรียน</p>
+              <a href={`/${slug}/${lessons[0]?.id.split('/').pop()}`}
+                 class="block w-full text-center bg-primary hover:bg-primary-dark text-white py-3 rounded-lg font-bold transition-colors cursor-pointer">
+                เริ่มเรียน
+              </a>
+              {course.data.courseType === 'learn-tool' && course.data.toolDownload && (
+                <a href={course.data.toolDownload} target="_blank" rel="noopener"
+                   class="block w-full text-center border border-dark-border hover:border-primary text-gray-light py-3 rounded-lg font-medium mt-2 transition-colors cursor-pointer">
+                  ดาวน์โหลด {course.data.toolName || 'เครื่องมือ'}
+                </a>
+              )}
+            </div>
+            <BrokerCTA placement="sidebar" />
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Layout>
