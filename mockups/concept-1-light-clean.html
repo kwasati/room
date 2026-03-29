@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Mockup — Concept 1: Light & Clean</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #FAFAFA;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+  --primary: #0D9488;
+  --primary-dark: #0F766E;
+  --primary-light: #CCFBF1;
+  --accent: #F97316;
+  --text: #1F2937;
+  --text-light: #6B7280;
+  --text-dim: #9CA3AF;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+body {
+  font-family: 'Noto Sans Thai', 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TopBar */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 20px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-weight: 700; font-size: 18px; color: var(--primary); text-decoration: none; }
+.logo-badge {
+  display: inline-block; background: var(--primary); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+  margin-left: 8px; vertical-align: middle; letter-spacing: 0.5px;
+}
+.topbar-link { font-size: 14px; color: var(--text-light); text-decoration: none; }
+.topbar-link:hover { color: var(--primary); }
+
+/* Hero */
+.hero {
+  text-align: center; padding: 48px 20px 32px;
+  max-width: 640px; margin: 0 auto;
+}
+.hero h1 { font-size: 28px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+.hero h1 span { color: var(--primary); }
+.hero p { font-size: 16px; color: var(--text-light); line-height: 1.7; }
+.hero-stats {
+  margin-top: 16px; font-size: 14px; color: var(--text-dim);
+}
+.hero-stats strong { color: var(--primary); font-weight: 600; }
+
+/* Filters */
+.filters {
+  display: flex; gap: 8px; justify-content: center;
+  padding: 0 20px 32px; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 8px 20px; border-radius: 99px; border: 1.5px solid var(--border);
+  background: var(--card); font-size: 14px; font-weight: 500;
+  color: var(--text-light); cursor: pointer; transition: all 0.15s;
+  font-family: inherit;
+}
+.filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.filter-btn.active {
+  background: var(--primary); color: #fff; border-color: var(--primary);
+}
+
+/* Grid */
+.grid-container { max-width: 1200px; margin: 0 auto; padding: 0 20px 48px; }
+.grid {
+  display: grid; gap: 20px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* Card */
+.card {
+  background: var(--card); border-radius: var(--radius);
+  border: 1px solid var(--border); overflow: hidden;
+  transition: all 0.2s ease; cursor: pointer; text-decoration: none; color: inherit;
+  display: block;
+}
+.card:hover { border-color: var(--primary); box-shadow: 0 8px 24px rgba(13,148,136,0.08); transform: translateY(-2px); }
+.card-thumb {
+  aspect-ratio: 16/9; background: linear-gradient(135deg, var(--primary-light), #E0F2FE);
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.card-thumb svg { width: 48px; height: 48px; color: var(--primary); opacity: 0.5; }
+.card-badge {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--primary); color: #fff; font-size: 11px;
+  font-weight: 700; padding: 3px 10px; border-radius: 6px;
+}
+.card-body { padding: 16px 20px 20px; }
+.card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.card-type {
+  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px;
+  background: var(--primary-light); color: var(--primary-dark);
+}
+.card-count { font-size: 12px; color: var(--text-dim); }
+.card-title { font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+.card:hover .card-title { color: var(--primary); }
+.card-desc { font-size: 14px; color: var(--text-light); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.card-tag { font-size: 11px; color: var(--text-dim); background: var(--bg); padding: 3px 10px; border-radius: 6px; }
+
+/* Lesson Page Preview */
+.lesson-section { max-width: 1200px; margin: 0 auto; padding: 32px 20px 48px; }
+.breadcrumb { display: flex; gap: 8px; font-size: 14px; color: var(--text-dim); margin-bottom: 24px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-light); text-decoration: none; }
+.breadcrumb a:hover { color: var(--primary); }
+.lesson-layout { display: flex; gap: 32px; }
+@media (max-width: 1023px) { .lesson-layout { flex-direction: column; } }
+
+.lesson-sidebar {
+  width: 280px; flex-shrink: 0;
+}
+@media (max-width: 1023px) { .lesson-sidebar { display: none; } }
+.sidebar-card {
+  position: sticky; top: 72px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
+}
+.sidebar-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-light); }
+.sidebar-header a { color: var(--text-light); text-decoration: none; }
+.sidebar-header a:hover { color: var(--primary); }
+.sidebar-list { padding: 6px; }
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--text-light); text-decoration: none;
+  transition: all 0.15s;
+}
+.sidebar-item:hover { background: var(--bg); color: var(--text); }
+.sidebar-item.active { background: var(--primary-light); color: var(--primary-dark); }
+.sidebar-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--border); display: flex; align-items: center;
+  justify-content: center; font-size: 12px; flex-shrink: 0;
+}
+.sidebar-item.active .sidebar-num { border-color: var(--primary); color: var(--primary); }
+
+.lesson-content { flex: 1; min-width: 0; }
+.video-embed {
+  aspect-ratio: 16/9; background: #E5E7EB; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 28px;
+  color: var(--text-dim); font-size: 14px;
+}
+.lesson-content h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.lesson-meta { font-size: 13px; color: var(--text-dim); margin-bottom: 24px; }
+.lesson-body { font-size: 16px; line-height: 1.8; color: var(--text); }
+.lesson-body p { margin-bottom: 16px; }
+
+.prev-next {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);
+}
+.prev-next a {
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--text-light); font-size: 14px;
+  padding: 10px 16px; border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+.prev-next a:hover { color: var(--primary); background: var(--primary-light); }
+.prev-next small { display: block; font-size: 11px; color: var(--text-dim); }
+
+/* Section divider */
+.section-divider {
+  max-width: 1200px; margin: 48px auto;
+  padding: 16px 20px; text-align: center;
+  font-size: 13px; color: var(--text-dim);
+  border-top: 1px dashed var(--border);
+}
+
+/* Mobile bar */
+.mobile-bar {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border); padding: 12px 20px;
+  justify-content: space-between; align-items: center; z-index: 40;
+}
+@media (max-width: 1023px) { .mobile-bar { display: flex; } }
+.mobile-bar span { font-size: 14px; color: var(--text); font-weight: 500; }
+.mobile-bar a {
+  background: var(--primary); color: #fff; padding: 10px 20px;
+  border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<!-- ====== CONCEPT 1: LIGHT & CLEAN ====== -->
+<div style="background:var(--primary);color:#fff;text-align:center;padding:12px;font-size:14px;font-weight:600;">
+  CONCEPT 1 — Light & Clean (Teal + Orange, White BG, Spacious)
+</div>
+
+<!-- TopBar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div style="display:flex;align-items:center;">
+      <a href="#" class="logo">Room</a>
+      <span class="logo-badge">FREE</span>
+    </div>
+    <a href="#" class="topbar-link">intensivetrader.com ↗</a>
+  </div>
+</div>
+
+<!-- Home Page -->
+<div class="hero">
+  <h1>เรียนเทรดฟรี<br><span>จากประสบการณ์จริง</span></h1>
+  <p>คอร์สสำหรับมือใหม่ที่อยากเริ่มเทรด Forex อย่างถูกวิธี<br>ไม่มีค่าใช้จ่าย ไม่มีเงื่อนไข</p>
+  <div class="hero-stats">
+    <strong>2</strong> คอร์ส &bull; <strong>4</strong> บทเรียน &bull; ฟรีทั้งหมด
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active">ทั้งหมด</button>
+  <button class="filter-btn">คอร์สเรียน</button>
+  <button class="filter-btn">เครื่องมือ</button>
+</div>
+
+<div class="grid-container">
+  <div class="grid">
+    <a href="#" class="card">
+      <div class="card-thumb">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span class="card-badge">FREE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">คอร์สเรียน</span>
+          <span class="card-count">3 บท</span>
+        </div>
+        <div class="card-title">Forex พื้นฐาน</div>
+        <div class="card-desc">เรียนรู้พื้นฐาน Forex ตั้งแต่ต้น สำหรับมือใหม่ที่ไม่เคยเทรดมาก่อน</div>
+        <div class="card-tags">
+          <span class="card-tag">Forex</span>
+          <span class="card-tag">มือใหม่</span>
+          <span class="card-tag">พื้นฐาน</span>
+        </div>
+      </div>
+    </a>
+    <a href="#" class="card">
+      <div class="card-thumb" style="background:linear-gradient(135deg,#FEF3C7,#FFEDD5);">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+        <span class="card-badge" style="background:var(--accent);">FREE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type" style="background:#FEF3C7;color:#92400E;">เครื่องมือ</span>
+          <span class="card-count">1 บท</span>
+        </div>
+        <div class="card-title">XCS Guide — คู่มือใช้งาน</div>
+        <div class="card-desc">คู่มือแนะนำการใช้ XCS เครื่องมือวิเคราะห์ตลาดจาก IntensiveTrader</div>
+        <div class="card-tags">
+          <span class="card-tag">XCS</span>
+          <span class="card-tag">เครื่องมือ</span>
+        </div>
+      </div>
+    </a>
+    <a href="#" class="card">
+      <div class="card-thumb">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span class="card-badge">FREE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type">คอร์สเรียน</span>
+          <span class="card-count">5 บท</span>
+        </div>
+        <div class="card-title">Price Action เทคนิค</div>
+        <div class="card-desc">เรียนรู้การอ่านกราฟแท่งเทียน แนวรับแนวต้าน และการเข้าจุด</div>
+        <div class="card-tags">
+          <span class="card-tag">Price Action</span>
+          <span class="card-tag">เทคนิค</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="section-divider">↓ Lesson Page Preview ↓</div>
+
+<!-- Lesson Page -->
+<div class="lesson-section">
+  <div class="breadcrumb">
+    <a href="#">Room</a><span>/</span>
+    <a href="#">Forex พื้นฐาน</a><span>/</span>
+    <span style="color:var(--text)">Forex คืออะไร?</span>
+  </div>
+
+  <div class="lesson-layout">
+    <div class="lesson-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-header"><a href="#">← Forex พื้นฐาน</a></div>
+        <div class="sidebar-list">
+          <a href="#" class="sidebar-item active">
+            <span class="sidebar-num">1</span>
+            <span>Forex คืออะไร?</span>
+          </a>
+          <a href="#" class="sidebar-item">
+            <span class="sidebar-num">2</span>
+            <span>Currency Pairs</span>
+          </a>
+          <a href="#" class="sidebar-item">
+            <span class="sidebar-num">3</span>
+            <span>วิธีเริ่มเทรด</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson-content">
+      <div class="video-embed">Video Player</div>
+      <div class="lesson-meta">บทที่ 1 จาก 3</div>
+      <h1>Forex คืออะไร?</h1>
+      <div class="lesson-body">
+        <p>Forex ย่อมาจาก Foreign Exchange หรือตลาดแลกเปลี่ยนเงินตราระหว่างประเทศ เป็นตลาดการเงินที่ใหญ่ที่สุดในโลก มีมูลค่าการซื้อขายมากกว่า 6 ล้านล้านดอลลาร์ต่อวัน</p>
+        <p>ในบทนี้เราจะมาทำความรู้จักกับตลาด Forex ว่ามันทำงานอย่างไร ใครเป็นผู้เล่น และทำไมมันถึงน่าสนใจสำหรับนักลงทุนรายย่อย</p>
+      </div>
+      <div class="prev-next">
+        <div></div>
+        <a href="#">
+          <div><small>ถัดไป</small><span>Currency Pairs</span></div>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-bar">
+  <span>พร้อมเทรดจริง?</span>
+  <a href="#">สมัครฟรี</a>
+</div>
+
+</body>
+</html>

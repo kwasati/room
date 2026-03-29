@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Layout B — Bento + Progress</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0F0F0F;
+  --card: #1A1A1A;
+  --card-hover: #1F1F1F;
+  --border: #2A2A2A;
+  --primary: #DC2626;
+  --primary-dark: #B91C1C;
+  --primary-glow: rgba(220,38,38,0.1);
+  --secondary: #F59E0B;
+  --secondary-glow: rgba(245,158,11,0.1);
+  --text: #E5E7EB;
+  --text-light: #9CA3AF;
+  --text-dim: #6B7280;
+  --green: #22C55E;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+body {
+  font-family: 'Noto Sans Thai', 'Inter', system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+
+/* TopBar - floating pill */
+.topbar-wrap { padding: 10px 16px 0; position: sticky; top: 0; z-index: 50; }
+.topbar {
+  max-width: 1100px; margin: 0 auto;
+  background: rgba(26,26,26,0.85); backdrop-filter: blur(16px);
+  border-radius: 99px; border: 1px solid var(--border);
+  padding: 0 22px; height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-weight: 800; font-size: 17px; text-decoration: none; }
+.logo span { color: var(--primary); }
+.logo-badge {
+  display: inline-block; background: var(--primary); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+  margin-left: 6px; vertical-align: middle;
+}
+.topbar-link { font-size: 13px; color: var(--text-dim); text-decoration: none; }
+
+/* Hero - big & bold */
+.hero {
+  max-width: 1100px; margin: 0 auto;
+  padding: 52px 20px 36px; text-align: center;
+}
+.hero h1 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 14px; letter-spacing: -0.5px; }
+@media (min-width: 640px) { .hero h1 { font-size: 44px; } }
+.hero h1 span { color: var(--secondary); }
+.hero p { font-size: 15px; color: var(--text-light); max-width: 440px; margin: 0 auto; }
+
+/* Stats pills */
+.stats { display: flex; gap: 10px; justify-content: center; margin: 20px 0 36px; flex-wrap: wrap; }
+.stat {
+  background: var(--card); border: 1px solid var(--border); border-radius: 99px;
+  padding: 8px 18px; font-size: 13px; color: var(--text-light); font-weight: 500;
+}
+.stat strong { color: var(--secondary); font-weight: 700; }
+
+/* Bento Grid */
+.bento-wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 48px; }
+.bento { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .bento { grid-template-columns: repeat(2, 1fr); } .bento-featured { grid-column: span 2; } }
+@media (min-width: 1024px) { .bento { grid-template-columns: repeat(3, 1fr); } .bento-featured { grid-column: span 2; } }
+
+.bento-card {
+  background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
+  overflow: hidden; cursor: pointer; text-decoration: none; color: inherit;
+  display: flex; flex-direction: column; transition: all 0.2s;
+}
+.bento-card:hover { border-color: var(--primary); }
+.bento-thumb {
+  aspect-ratio: 16/9; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.bento-featured .bento-thumb { aspect-ratio: 21/9; }
+.bento-thumb-1 { background: linear-gradient(135deg, #1C1917, #292524); }
+.bento-thumb-2 { background: linear-gradient(135deg, #1C1917, #292524); }
+.bento-thumb svg { width: 44px; height: 44px; opacity: 0.25; }
+.bento-badge-wrap { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+.bento-badge {
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: var(--text);
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 99px;
+}
+.bento-free {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--green); color: #000;
+  font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 6px;
+}
+.bento-body { padding: 16px 18px 20px; flex: 1; }
+.bento-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.bento-featured .bento-title { font-size: 20px; }
+.bento-card:hover .bento-title { color: var(--primary); }
+.bento-desc { font-size: 14px; color: var(--text-light); line-height: 1.5; }
+.bento-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.bento-tags { display: flex; gap: 6px; }
+.bento-tag { font-size: 11px; color: var(--text-dim); background: var(--bg); padding: 3px 10px; border-radius: 99px; }
+.bento-count { font-size: 12px; color: var(--text-dim); }
+
+/* ===== LESSON PAGE ===== */
+.divider { max-width: 1100px; margin: 48px auto; padding: 16px 20px; text-align: center; font-size: 12px; color: var(--text-dim); border-top: 1px dashed var(--border); }
+
+.lesson-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 48px; }
+.breadcrumb { display: flex; gap: 6px; font-size: 13px; color: var(--text-dim); margin-bottom: 20px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-light); text-decoration: none; }
+.breadcrumb a:hover { color: var(--primary); }
+
+/* Pill navigation */
+.lesson-pills { display: flex; gap: 6px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+.lesson-pills::-webkit-scrollbar { display: none; }
+.pill {
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  padding: 8px 14px; border-radius: 99px; font-size: 13px; font-weight: 500;
+  color: var(--text-dim); text-decoration: none;
+  background: var(--card); border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.pill:hover { border-color: var(--primary); color: var(--text-light); }
+.pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.pill-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 600;
+}
+
+.video-embed {
+  aspect-ratio: 16/9; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; color: var(--text-dim); font-size: 14px;
+}
+
+/* Progress bar */
+.progress { margin-bottom: 24px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+.progress-bar { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; width: 33%; background: var(--primary); border-radius: 99px; }
+
+.lesson-content h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.lesson-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
+.lesson-body { font-size: 16px; line-height: 1.85; color: var(--text-light); }
+.lesson-body p { margin-bottom: 16px; }
+
+/* Next lesson card */
+.next-card {
+  display: flex; align-items: center; gap: 14px;
+  margin-top: 36px; padding: 16px; background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  text-decoration: none; color: inherit; transition: all 0.15s;
+}
+.next-card:hover { border-color: var(--primary); }
+.next-label { font-size: 11px; color: var(--text-dim); margin-bottom: 2px; }
+.next-title { font-size: 15px; font-weight: 600; }
+.next-card:hover .next-title { color: var(--primary); }
+.next-arrow { margin-left: auto; color: var(--text-dim); font-size: 20px; flex-shrink: 0; }
+.next-card:hover .next-arrow { color: var(--primary); }
+.next-num {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: var(--primary-glow); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: var(--primary);
+}
+</style>
+</head>
+<body>
+
+<div style="background:var(--primary);color:#fff;text-align:center;padding:10px;font-size:13px;font-weight:600;">
+  LAYOUT B — Bento Grid + Pill Nav + Progress Bar + Floating TopBar
+</div>
+
+<div class="topbar-wrap">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;">
+      <a href="#" class="logo"><span>Room</span></a>
+      <span class="logo-badge">FREE</span>
+    </div>
+    <a href="#" class="topbar-link">intensivetrader.com ↗</a>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="hero">
+  <h1>เรียนเทรด<br><span>จากประสบการณ์จริง</span></h1>
+  <p>คอร์สฟรี สำหรับมือใหม่ที่อยากเริ่มเทรด Forex อย่างถูกวิธี</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><strong>2</strong> คอร์ส</div>
+  <div class="stat"><strong>4</strong> บทเรียน</div>
+  <div class="stat"><strong>ฟรี</strong> ทั้งหมด</div>
+</div>
+
+<div class="bento-wrap">
+  <div class="bento">
+    <a href="#" class="bento-card bento-featured">
+      <div class="bento-thumb bento-thumb-1">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--primary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+        <div class="bento-badge-wrap"><span class="bento-badge">คอร์สเรียน</span></div>
+        <span class="bento-free">FREE</span>
+      </div>
+      <div class="bento-body">
+        <div class="bento-title">Forex พื้นฐาน</div>
+        <div class="bento-desc">เรียนรู้พื้นฐาน Forex ตั้งแต่ต้น สำหรับมือใหม่ที่ไม่เคยเทรดมาก่อน เข้าใจง่าย ใช้ได้จริง</div>
+        <div class="bento-footer">
+          <div class="bento-tags"><span class="bento-tag">Forex</span><span class="bento-tag">มือใหม่</span></div>
+          <span class="bento-count">3 บท</span>
+        </div>
+      </div>
+    </a>
+    <a href="#" class="bento-card">
+      <div class="bento-thumb bento-thumb-2">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--secondary);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+        <div class="bento-badge-wrap"><span class="bento-badge">เครื่องมือ</span></div>
+        <span class="bento-free">FREE</span>
+      </div>
+      <div class="bento-body">
+        <div class="bento-title">XCS Guide</div>
+        <div class="bento-desc">คู่มือเครื่องมือวิเคราะห์ตลาด</div>
+        <div class="bento-footer">
+          <div class="bento-tags"><span class="bento-tag">XCS</span></div>
+          <span class="bento-count">1 บท</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="divider">↓ Lesson Page ↓</div>
+
+<!-- LESSON -->
+<div class="lesson-wrap">
+  <div class="breadcrumb">
+    <a href="#">Room</a><span>/</span>
+    <a href="#">Forex พื้นฐาน</a><span>/</span>
+    <span style="color:var(--text)">Forex คืออะไร?</span>
+  </div>
+
+  <div class="lesson-pills">
+    <a href="#" class="pill active"><span class="pill-num">1</span>Forex คืออะไร?</a>
+    <a href="#" class="pill"><span class="pill-num">2</span>Currency Pairs</a>
+    <a href="#" class="pill"><span class="pill-num">3</span>วิธีเริ่มเทรด</a>
+  </div>
+
+  <div class="video-embed">Video Player</div>
+
+  <div class="progress">
+    <div class="progress-label"><span>ความคืบหน้า</span><span>1 / 3</span></div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+  </div>
+
+  <div class="lesson-content">
+    <h1>Forex คืออะไร?</h1>
+    <div class="lesson-meta">บทที่ 1 จาก 3</div>
+    <div class="lesson-body">
+      <p>Forex ย่อมาจาก Foreign Exchange หรือตลาดแลกเปลี่ยนเงินตราระหว่างประเทศ เป็นตลาดการเงินที่ใหญ่ที่สุดในโลก มีมูลค่าการซื้อขายมากกว่า 6 ล้านล้านดอลลาร์ต่อวัน</p>
+      <p>ในบทนี้เราจะมาทำความรู้จักกับตลาด Forex ว่ามันทำงานอย่างไร ใครเป็นผู้เล่น และทำไมมันถึงน่าสนใจสำหรับนักลงทุนรายย่อย</p>
+    </div>
+  </div>
+
+  <a href="#" class="next-card">
+    <span class="next-num">2</span>
+    <div>
+      <div class="next-label">ถัดไป</div>
+      <div class="next-title">Currency Pairs</div>
+    </div>
+    <span class="next-arrow">→</span>
+  </a>
+</div>
+
+</body>
+</html>

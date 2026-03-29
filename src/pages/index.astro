@@ -1,22 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import BrokerCTA from '../components/BrokerCTA.astro';
+import { getCollection, render } from 'astro:content';
 
 const courses = (await getCollection('courses')).sort((a, b) => a.data.order - b.data.order);
-const lessons = await getCollection('lessons');
+const allLessons = (await getCollection('lessons')).sort((a, b) => a.data.order - b.data.order);
 
 const lessonCounts = new Map<string, number>();
-for (const lesson of lessons) {
+for (const lesson of allLessons) {
   lessonCounts.set(lesson.data.course, (lessonCounts.get(lesson.data.course) || 0) + 1);
 }
 
-const totalLessons = lessons.length;
+const totalLessons = allLessons.length;
+
+// Pre-render all lesson content at build time
+const renderedLessons = new Map<string, { id: string; title: string; duration?: string; order: number; course: string; Content: any }[]>();
+for (const lesson of allLessons) {
+  const { Content } = await render(lesson);
+  const courseId = lesson.data.course;
+  if (!renderedLessons.has(courseId)) renderedLessons.set(courseId, []);
+  renderedLessons.get(courseId)!.push({
+    id: lesson.id.split('/').pop()!,
+    title: lesson.data.title,
+    duration: lesson.data.duration,
+    order: lesson.data.order,
+    course: courseId,
+    Content,
+  });
+}
 ---
 
 <Layout title="Room — เรียนเทรดฟรี | IntensiveTrader">
   <section class="py-10 max-md:py-9">
     <div class="max-w-[1100px] mx-auto px-5">
-      <!-- Hero: desktop left-aligned, mobile centered -->
+      <!-- Hero -->
       <div class="flex items-start justify-between gap-5 flex-wrap max-md:flex-col max-md:items-center max-md:text-center">
         <div>
           <h1 class="text-[32px] max-md:text-[24px] font-bold text-gray-light leading-tight mb-2">
@@ -25,13 +42,11 @@ const totalLessons = lessons.length;
           <p class="text-[15px] text-gray-light max-w-[480px] leading-relaxed">
             คอร์สสำหรับมือใหม่ที่อยากเริ่มเทรด Forex อย่างถูกวิธี ไม่มีค่าใช้จ่าย ไม่มีเงื่อนไข
           </p>
-          <!-- Mobile: inline stats -->
           <p class="hidden max-md:block text-[13px] text-gray-dark mt-3">
             <strong class="text-secondary">{courses.length}</strong> คอร์ส &middot;
             <strong class="text-secondary">{totalLessons}</strong> บทเรียน &middot; ฟรีทั้งหมด
           </p>
         </div>
-        <!-- Desktop: stat boxes -->
         <div class="flex gap-4 items-center mt-2 max-md:hidden">
           <div class="text-center">
             <div class="text-[22px] font-bold text-secondary">{courses.length}</div>
@@ -64,8 +79,8 @@ const totalLessons = lessons.length;
           const isLearn = course.data.courseType === 'learn';
           return (
             <div data-course-type={course.data.courseType}>
-              <a href={`/${course.id}`} class="flex bg-dark-card rounded-[14px] border border-dark-border hover:border-primary transition-all cursor-pointer overflow-hidden group">
-                <div class={`w-[180px] shrink-0 flex items-center justify-center bg-gradient-to-br from-stone-900 to-stone-800 relative`}>
+              <button data-course-id={course.id} class="course-card flex w-full text-left bg-dark-card rounded-[14px] border border-dark-border hover:border-primary transition-all cursor-pointer overflow-hidden group">
+                <div class="w-[180px] shrink-0 flex items-center justify-center bg-gradient-to-br from-stone-900 to-stone-800 relative">
                   <svg class={`w-9 h-9 opacity-25 ${isLearn ? 'text-primary' : 'text-secondary'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     {isLearn
                       ? <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -82,7 +97,7 @@ const totalLessons = lessons.length;
                   <div class="text-[16px] font-semibold group-hover:text-primary transition-colors mb-1">{course.data.title}</div>
                   <div class="text-[13px] text-gray-light line-clamp-2 leading-snug">{course.data.description}</div>
                 </div>
-              </a>
+              </button>
             </div>
           );
         })}
@@ -96,7 +111,7 @@ const totalLessons = lessons.length;
           const isLearn = course.data.courseType === 'learn';
           return (
             <div data-course-type={course.data.courseType}>
-              <a href={`/${course.id}`} class="flex items-center gap-3.5 p-3.5 bg-dark-card rounded-[14px] border border-dark-border hover:border-primary transition-all cursor-pointer mb-2">
+              <button data-course-id={course.id} class="course-card flex items-center gap-3.5 p-3.5 w-full text-left bg-dark-card rounded-[14px] border border-dark-border hover:border-primary transition-all cursor-pointer mb-2">
                 <div class={`w-11 h-11 rounded-[10px] flex items-center justify-center shrink-0 ${isLearn ? 'bg-primary/10' : 'bg-secondary/10'}`}>
                   <svg class={`w-5 h-5 ${isLearn ? 'text-primary' : 'text-secondary'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     {isLearn
@@ -110,21 +125,178 @@ const totalLessons = lessons.length;
                   <div class="text-[12px] text-gray-dark truncate">{course.data.description}</div>
                 </div>
                 <span class={`text-[11px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${isLearn ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'}`}>{count} บท</span>
-                <span class="text-gray-dark text-[14px]">→</span>
-              </a>
+                <span class="text-gray-dark text-[14px] course-arrow transition-transform">→</span>
+              </button>
             </div>
           );
         })}
       </div>
+
+      <!-- Content area (hidden by default, shown when course is clicked) -->
+      {courses.map(course => {
+        const courseLessons = renderedLessons.get(course.id) || [];
+        const isMultiLesson = courseLessons.length > 1;
+        return (
+          <div id={`content-${course.id}`} class="course-content hidden mt-6" data-course-content={course.id}>
+            <div class="bg-dark-card border border-dark-border rounded-[14px] p-6 max-md:p-4">
+              <!-- Close button + title -->
+              <div class="flex items-center justify-between mb-5">
+                <h2 class="text-[20px] max-md:text-[18px] font-bold text-gray-light">{course.data.title}</h2>
+                <button class="close-content text-gray-dark hover:text-gray-light transition-colors p-1 cursor-pointer" aria-label="ปิด">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Multi-lesson: show lesson tabs */}
+              {isMultiLesson && (
+                <div class="lesson-tabs flex gap-1.5 mb-6 flex-wrap" data-course-tabs={course.id}>
+                  {courseLessons.map((lesson, i) => (
+                    <button
+                      data-lesson-tab={`${course.id}/${lesson.id}`}
+                      class={`lesson-tab px-4 py-2 rounded-full text-[13px] font-medium transition-colors cursor-pointer ${i === 0 ? 'bg-primary text-white border border-primary' : 'bg-transparent text-gray-dark border border-dark-border hover:border-primary hover:text-primary'}`}
+                    >
+                      {i + 1}. {lesson.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Lesson content */}
+              {courseLessons.map((lesson, i) => (
+                <div
+                  data-lesson-content={`${course.id}/${lesson.id}`}
+                  class={`lesson-body ${i > 0 ? 'hidden' : ''}`}
+                >
+                  {lesson.duration && (
+                    <p class="text-[13px] text-gray-dark mb-4">{lesson.duration}</p>
+                  )}
+
+                  <article class="prose prose-invert max-w-none
+                    prose-headings:font-bold prose-headings:text-gray-light
+                    prose-p:text-gray prose-p:leading-relaxed
+                    prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                    prose-strong:text-gray-light
+                    prose-code:text-primary-light prose-code:bg-dark-card prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+                    prose-li:text-gray prose-ol:text-gray prose-ul:text-gray
+                    prose-table:text-gray prose-th:text-gray-light prose-td:border-dark-border prose-th:border-dark-border">
+                    <lesson.Content />
+                  </article>
+
+                  {/* Tool download */}
+                  {course.data.courseType === 'learn-tool' && course.data.toolDownload && (
+                    <div class="mt-8 p-5 bg-dark border border-dark-border rounded-[14px] text-center">
+                      <p class="text-gray-light font-bold mb-1">ดาวน์โหลด {course.data.toolName || 'เครื่องมือ'}</p>
+                      <p class="text-[13px] text-gray mb-3">พร้อมใช้งานฟรี</p>
+                      <a href={course.data.toolDownload} target="_blank" rel="noopener"
+                         class="inline-block px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-[10px] font-bold transition-colors cursor-pointer">
+                        ดาวน์โหลดฟรี
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              <BrokerCTA placement="end-of-lesson" />
+            </div>
+          </div>
+        );
+      })}
     </div>
   </section>
 </Layout>
 
 <script>
+  // Course card toggle
+  const courseCards = document.querySelectorAll<HTMLButtonElement>('.course-card');
+  const courseContents = document.querySelectorAll<HTMLElement>('.course-content');
+  let activeCourse: string | null = null;
+
+  courseCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const courseId = card.getAttribute('data-course-id')!;
+
+      if (activeCourse === courseId) {
+        // Toggle off
+        document.getElementById(`content-${courseId}`)?.classList.add('hidden');
+        deactivateCard(courseId);
+        activeCourse = null;
+        return;
+      }
+
+      // Hide all content & deactivate all cards
+      courseContents.forEach(c => c.classList.add('hidden'));
+      courseCards.forEach(c => {
+        c.classList.remove('border-primary');
+        c.classList.add('border-dark-border');
+      });
+
+      // Show selected
+      const content = document.getElementById(`content-${courseId}`);
+      if (content) {
+        content.classList.remove('hidden');
+        // Activate card border
+        document.querySelectorAll<HTMLButtonElement>(`.course-card[data-course-id="${courseId}"]`).forEach(c => {
+          c.classList.remove('border-dark-border');
+          c.classList.add('border-primary');
+        });
+        activeCourse = courseId;
+        // Smooth scroll to content
+        setTimeout(() => content.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      }
+    });
+  });
+
+  function deactivateCard(courseId: string) {
+    document.querySelectorAll<HTMLButtonElement>(`.course-card[data-course-id="${courseId}"]`).forEach(c => {
+      c.classList.remove('border-primary');
+      c.classList.add('border-dark-border');
+    });
+  }
+
+  // Close buttons
+  document.querySelectorAll('.close-content').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = btn.closest('.course-content') as HTMLElement;
+      if (content) {
+        content.classList.add('hidden');
+        const courseId = content.getAttribute('data-course-content')!;
+        deactivateCard(courseId);
+        activeCourse = null;
+      }
+    });
+  });
+
+  // Lesson tabs (for multi-lesson courses)
+  document.querySelectorAll<HTMLButtonElement>('.lesson-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const lessonKey = tab.getAttribute('data-lesson-tab')!;
+      const courseId = lessonKey.split('/')[0];
+
+      // Deactivate all tabs in this course
+      document.querySelectorAll<HTMLButtonElement>(`[data-lesson-tab^="${courseId}/"]`).forEach(t => {
+        t.classList.remove('bg-primary', 'text-white', 'border-primary');
+        t.classList.add('bg-transparent', 'text-gray-dark', 'border-dark-border');
+      });
+
+      // Activate clicked tab
+      tab.classList.remove('bg-transparent', 'text-gray-dark', 'border-dark-border');
+      tab.classList.add('bg-primary', 'text-white', 'border-primary');
+
+      // Hide all lesson bodies in this course, show selected
+      document.querySelectorAll<HTMLElement>(`[data-lesson-content^="${courseId}/"]`).forEach(body => {
+        body.classList.add('hidden');
+      });
+      document.querySelector<HTMLElement>(`[data-lesson-content="${lessonKey}"]`)?.classList.remove('hidden');
+    });
+  });
+
+  // Filter buttons
   const filterBtns = document.querySelectorAll('.filter-btn');
   const desktopCards = document.querySelectorAll('#course-grid-desktop > div');
   const mobileCards = document.querySelectorAll('#course-grid-mobile > div:not(:first-child)');
-  const allCards = [...desktopCards, ...mobileCards];
+  const allFilterCards = [...desktopCards, ...mobileCards];
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -135,10 +307,17 @@ const totalLessons = lessons.length;
       });
       btn.classList.remove('bg-transparent', 'text-gray-dark', 'border-dark-border');
       btn.classList.add('bg-primary', 'text-white', 'border-primary');
-      allCards.forEach(card => {
+      allFilterCards.forEach(card => {
         const type = card.getAttribute('data-course-type');
         (card as HTMLElement).style.display = (filter === 'all' || type === filter) ? '' : 'none';
       });
+      // Hide content when filtering
+      courseContents.forEach(c => c.classList.add('hidden'));
+      courseCards.forEach(c => {
+        c.classList.remove('border-primary');
+        c.classList.add('border-dark-border');
+      });
+      activeCourse = null;
     });
   });
 </script>

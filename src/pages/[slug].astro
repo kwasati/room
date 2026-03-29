@@ -18,7 +18,8 @@ const lessons = (await getCollection('lessons'))
   .sort((a, b) => a.data.order - b.data.order);
 
 if (lessons.length === 1) {
-  return Astro.redirect(`/${slug}/${lessons[0].id.split('/').pop()}`);
+  // Single-lesson courses: redirect to homepage (content shown inline there)
+  return Astro.redirect('/');
 }
 ---
 

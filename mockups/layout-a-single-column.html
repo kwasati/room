@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Layout A — Single Column</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0F0F0F;
+  --card: #1A1A1A;
+  --card-hover: #1F1F1F;
+  --border: #2A2A2A;
+  --primary: #DC2626;
+  --primary-dark: #B91C1C;
+  --primary-glow: rgba(220,38,38,0.1);
+  --secondary: #F59E0B;
+  --secondary-glow: rgba(245,158,11,0.1);
+  --text: #E5E7EB;
+  --text-light: #9CA3AF;
+  --text-dim: #6B7280;
+  --green: #22C55E;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+body {
+  font-family: 'Noto Sans Thai', 'Inter', system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+
+/* TopBar - minimal */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(15,15,15,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 640px; margin: 0 auto;
+  padding: 0 20px; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-weight: 700; font-size: 18px; text-decoration: none; }
+.logo span { color: var(--primary); }
+.logo-badge {
+  display: inline-block; background: var(--primary); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+  margin-left: 6px; vertical-align: middle;
+}
+.topbar-link { font-size: 13px; color: var(--text-dim); text-decoration: none; }
+.topbar-link:hover { color: var(--primary); }
+
+/* Container - all content single column */
+.container { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+
+/* Hero */
+.hero { padding: 48px 0 32px; text-align: center; }
+.hero h1 { font-size: 24px; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+.hero h1 span { color: var(--secondary); }
+.hero p { font-size: 15px; color: var(--text-light); line-height: 1.7; }
+.hero-stats { margin-top: 14px; font-size: 13px; color: var(--text-dim); }
+.hero-stats strong { color: var(--secondary); }
+
+/* Course List - rows instead of grid */
+.section-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 600; }
+.course-list { margin-bottom: 48px; }
+.course-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px; background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 8px; text-decoration: none; color: inherit;
+  transition: all 0.15s; cursor: pointer;
+}
+.course-row:hover { border-color: var(--primary); background: var(--card-hover); }
+.course-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-sm);
+  background: var(--primary-glow); display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.course-icon svg { width: 22px; height: 22px; color: var(--primary); }
+.course-icon.tool { background: var(--secondary-glow); }
+.course-icon.tool svg { color: var(--secondary); }
+.course-info { flex: 1; min-width: 0; }
+.course-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.course-row:hover h3 { color: var(--primary); }
+.course-info p { font-size: 13px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.course-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.course-count {
+  font-size: 11px; font-weight: 600; padding: 4px 10px;
+  border-radius: 99px; background: var(--primary-glow); color: var(--primary);
+}
+.course-count.tool { background: var(--secondary-glow); color: var(--secondary); }
+.course-arrow { color: var(--text-dim); font-size: 16px; }
+.course-row:hover .course-arrow { color: var(--primary); }
+
+/* ===== LESSON PAGE ===== */
+.divider {
+  padding: 32px 0; text-align: center;
+  font-size: 12px; color: var(--text-dim); border-top: 1px dashed var(--border);
+  margin: 32px 0;
+}
+
+.breadcrumb { display: flex; gap: 6px; font-size: 13px; color: var(--text-dim); margin-bottom: 20px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-light); text-decoration: none; }
+.breadcrumb a:hover { color: var(--primary); }
+
+/* Inline outline - collapsible on top */
+.outline {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 24px; overflow: hidden;
+}
+.outline-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; font-size: 13px; color: var(--text-light); font-weight: 500;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+}
+.outline-toggle:hover { color: var(--text); }
+.outline-toggle-arrow { transition: transform 0.2s; }
+.outline-toggle-arrow.open { transform: rotate(180deg); }
+.outline-list { padding: 0 6px 6px; }
+.outline-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-light); text-decoration: none;
+  transition: all 0.15s;
+}
+.outline-item:hover { background: var(--card-hover); color: var(--text); }
+.outline-item.active { background: var(--primary-glow); color: var(--primary); }
+.outline-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid var(--border); display: flex; align-items: center;
+  justify-content: center; font-size: 11px; flex-shrink: 0;
+}
+.outline-item.active .outline-num { border-color: var(--primary); color: var(--primary); }
+
+.video-embed {
+  aspect-ratio: 16/9; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; color: var(--text-dim); font-size: 14px;
+}
+
+.lesson-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+.lesson-content h1 { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+.lesson-body { font-size: 16px; line-height: 1.85; color: var(--text-light); }
+.lesson-body p { margin-bottom: 16px; }
+
+.prev-next {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.prev-next a {
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--text-light); font-size: 14px;
+  padding: 10px 14px; border-radius: var(--radius-sm); transition: all 0.15s;
+}
+.prev-next a:hover { color: var(--primary); background: var(--primary-glow); }
+.prev-next small { display: block; font-size: 11px; color: var(--text-dim); }
+
+/* CTA */
+.cta {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; text-align: center;
+  margin-bottom: 48px;
+}
+.cta h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.cta p { font-size: 14px; color: var(--text-light); margin-bottom: 16px; }
+.cta-btn {
+  display: inline-block; padding: 12px 24px;
+  background: var(--primary); color: #fff; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600; text-decoration: none;
+}
+.cta-btn:hover { background: var(--primary-dark); }
+</style>
+</head>
+<body>
+
+<div style="background:var(--primary);color:#fff;text-align:center;padding:10px;font-size:13px;font-weight:600;">
+  LAYOUT A — Single Column (640px max, list rows, inline outline, ไม่มี sidebar)
+</div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div style="display:flex;align-items:center;">
+      <a href="#" class="logo"><span>Room</span></a>
+      <span class="logo-badge">FREE</span>
+    </div>
+    <a href="#" class="topbar-link">intensivetrader.com ↗</a>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="container">
+  <div class="hero">
+    <h1>เรียนเทรดฟรี<br><span>จากประสบการณ์จริง</span></h1>
+    <p>คอร์สสำหรับมือใหม่ ไม่มีค่าใช้จ่าย ไม่มีเงื่อนไข</p>
+    <div class="hero-stats"><strong>2</strong> คอร์ส &middot; <strong>4</strong> บทเรียน &middot; ฟรีทั้งหมด</div>
+  </div>
+
+  <div class="course-list">
+    <div class="section-label">คอร์สทั้งหมด</div>
+    <a href="#" class="course-row">
+      <div class="course-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+      </div>
+      <div class="course-info">
+        <h3>Forex พื้นฐาน</h3>
+        <p>เรียนรู้พื้นฐาน Forex ตั้งแต่ต้น สำหรับมือใหม่</p>
+      </div>
+      <div class="course-right">
+        <span class="course-count">3 บท</span>
+        <span class="course-arrow">→</span>
+      </div>
+    </a>
+    <a href="#" class="course-row">
+      <div class="course-icon tool">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+      </div>
+      <div class="course-info">
+        <h3>XCS Guide — คู่มือใช้งาน</h3>
+        <p>คู่มือเครื่องมือวิเคราะห์ตลาดจาก IntensiveTrader</p>
+      </div>
+      <div class="course-right">
+        <span class="course-count tool">1 บท</span>
+        <span class="course-arrow">→</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="container"><div class="divider">↓ Lesson Page ↓</div></div>
+
+<!-- LESSON -->
+<div class="container">
+  <div class="breadcrumb">
+    <a href="#">Room</a><span>/</span>
+    <a href="#">Forex พื้นฐาน</a><span>/</span>
+    <span style="color:var(--text)">Forex คืออะไร?</span>
+  </div>
+
+  <div class="outline">
+    <button class="outline-toggle">
+      <span>สารบัญ — บทที่ 1 / 3</span>
+      <span class="outline-toggle-arrow open">▾</span>
+    </button>
+    <div class="outline-list">
+      <a href="#" class="outline-item active"><span class="outline-num">1</span><span>Forex คืออะไร?</span></a>
+      <a href="#" class="outline-item"><span class="outline-num">2</span><span>Currency Pairs</span></a>
+      <a href="#" class="outline-item"><span class="outline-num">3</span><span>วิธีเริ่มเทรด</span></a>
+    </div>
+  </div>
+
+  <div class="video-embed">Video Player</div>
+
+  <div class="lesson-content">
+    <div class="lesson-meta">บทที่ 1 จาก 3</div>
+    <h1>Forex คืออะไร?</h1>
+    <div class="lesson-body">
+      <p>Forex ย่อมาจาก Foreign Exchange หรือตลาดแลกเปลี่ยนเงินตราระหว่างประเทศ เป็นตลาดการเงินที่ใหญ่ที่สุดในโลก มีมูลค่าการซื้อขายมากกว่า 6 ล้านล้านดอลลาร์ต่อวัน</p>
+      <p>ในบทนี้เราจะมาทำความรู้จักกับตลาด Forex ว่ามันทำงานอย่างไร ใครเป็นผู้เล่น และทำไมมันถึงน่าสนใจสำหรับนักลงทุนรายย่อย</p>
+    </div>
+    <div class="prev-next">
+      <div></div>
+      <a href="#"><div><small>ถัดไป</small><span>Currency Pairs</span></div><span>→</span></a>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h3>เรียนจบแล้ว พร้อมลองเทรดจริงไหม?</h3>
+    <p>เปิดบัญชีเทรดฟรี — เริ่มฝึกด้วยบัญชี Demo ก่อนได้</p>
+    <a href="#" class="cta-btn">เปิดบัญชีเทรดฟรี</a>
+  </div>
+</div>
+
+</body>
+</html>
