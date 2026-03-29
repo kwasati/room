@@ -28,7 +28,6 @@ const currentIndex = allLessons.findIndex(l => l.id.split('/').pop() === lessonS
 if (currentIndex === -1) return Astro.redirect(`/${slug}`);
 
 const lesson = allLessons[currentIndex];
-const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
 const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
 const isSingleLesson = allLessons.length === 1;
 
@@ -43,28 +42,29 @@ const navLessons = allLessons.map(l => ({
 
 <Layout title={`${lesson.data.title} | ${course.data.title}`} description={`${lesson.data.title} — ${course.data.description}`} ogImage={course.data.thumbnail}>
   <section class="py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[1100px] mx-auto px-5 max-md:max-w-[640px]">
+      <!-- Mobile: inline outline -->
       {!isSingleLesson && (
-        <div class="lg:hidden">
+        <div class="md:hidden">
           <LessonNav courseSlug={slug!} courseTitle={course.data.title} lessons={navLessons} currentLessonSlug={lessonSlug!} />
         </div>
       )}
 
-      <div class={isSingleLesson ? 'max-w-4xl mx-auto' : 'flex gap-6'}>
+      <div class={isSingleLesson ? 'max-w-4xl mx-auto' : 'flex gap-7'}>
         {!isSingleLesson && (
           <LessonNav courseSlug={slug!} courseTitle={course.data.title} lessons={navLessons} currentLessonSlug={lessonSlug!} />
         )}
 
         <div class="flex-1 min-w-0">
           <!-- Breadcrumb -->
-          <nav class="mb-4">
-            <ol class="flex items-center gap-2 text-sm text-gray flex-wrap">
+          <nav class="mb-5">
+            <ol class="flex items-center gap-1.5 text-[13px] text-gray-dark flex-wrap">
               <li><a href="/" class="hover:text-primary transition-colors">Room</a></li>
-              <li class="text-gray-dark">/</li>
+              <li>/</li>
               {!isSingleLesson && (
                 <>
                   <li><a href={`/${slug}`} class="hover:text-primary transition-colors">{course.data.title}</a></li>
-                  <li class="text-gray-dark">/</li>
+                  <li>/</li>
                 </>
               )}
               <li class="text-gray-light">{lesson.data.title}</li>
@@ -73,7 +73,7 @@ const navLessons = allLessons.map(l => ({
 
           <!-- Video -->
           {lesson.data.videoId && (
-            <div class="aspect-video rounded-xl overflow-hidden bg-dark-card border border-dark-border mb-6">
+            <div class="aspect-video rounded-[14px] overflow-hidden bg-dark-card border border-dark-border mb-6">
               <iframe src={`https://www.youtube.com/embed/${lesson.data.videoId}`} title={lesson.data.title}
                 class="w-full h-full" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -84,10 +84,10 @@ const navLessons = allLessons.map(l => ({
           <!-- Header -->
           <div class="mb-6">
             {!isSingleLesson && (
-              <p class="text-sm text-gray-dark mb-1">บทที่ {currentIndex + 1} จาก {allLessons.length}</p>
+              <p class="text-[12px] text-gray-dark mb-1.5">บทที่ {currentIndex + 1} จาก {allLessons.length}</p>
             )}
-            <h1 class="text-xl lg:text-2xl font-extrabold text-gray-light mb-1">{lesson.data.title}</h1>
-            {lesson.data.duration && <p class="text-sm text-gray-dark">{lesson.data.duration}</p>}
+            <h1 class="text-[22px] max-md:text-[20px] font-bold text-gray-light mb-1">{lesson.data.title}</h1>
+            {lesson.data.duration && <p class="text-[13px] text-gray-dark">{lesson.data.duration}</p>}
           </div>
 
           <!-- Content -->
@@ -104,11 +104,11 @@ const navLessons = allLessons.map(l => ({
 
           <!-- Tool Download -->
           {course.data.courseType === 'learn-tool' && course.data.toolDownload && (
-            <div class="mt-8 p-5 bg-dark-card border border-dark-border rounded-xl text-center">
+            <div class="mt-8 p-5 bg-dark-card border border-dark-border rounded-[14px] text-center">
               <p class="text-gray-light font-bold mb-1">ดาวน์โหลด {course.data.toolName || 'เครื่องมือ'}</p>
-              <p class="text-sm text-gray mb-3">พร้อมใช้งานฟรี</p>
+              <p class="text-[13px] text-gray mb-3">พร้อมใช้งานฟรี</p>
               <a href={course.data.toolDownload} target="_blank" rel="noopener"
-                 class="inline-block px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg font-bold transition-colors cursor-pointer">
+                 class="inline-block px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-[10px] font-bold transition-colors cursor-pointer">
                 ดาวน์โหลดฟรี
               </a>
             </div>
@@ -117,27 +117,33 @@ const navLessons = allLessons.map(l => ({
           <!-- Broker CTA -->
           <BrokerCTA placement="end-of-lesson" />
 
-          <!-- Prev/Next -->
+          <!-- Next lesson card -->
           {!isSingleLesson && (
-            <nav class="flex items-center justify-between mt-10 pt-6 border-t border-dark-border">
-              {prevLesson ? (
-                <a href={`/${slug}/${prevLesson.id.split('/').pop()}`} class="flex items-center gap-2 text-gray hover:text-primary transition-colors cursor-pointer">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                  <div><p class="text-[11px] text-gray-dark">ก่อนหน้า</p><p class="font-medium text-sm">{prevLesson.data.title}</p></div>
-                </a>
-              ) : <div />}
-              {nextLesson ? (
-                <a href={`/${slug}/${nextLesson.id.split('/').pop()}`} class="flex items-center gap-2 text-gray hover:text-primary transition-colors text-right cursor-pointer">
-                  <div><p class="text-[11px] text-gray-dark">ถัดไป</p><p class="font-medium text-sm">{nextLesson.data.title}</p></div>
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                </a>
-              ) : (
-                <a href="/" class="flex items-center gap-2 text-gray hover:text-primary transition-colors text-right cursor-pointer">
-                  <div><p class="text-[11px] text-gray-dark">จบคอร์ส</p><p class="font-medium text-sm">กลับหน้า Room</p></div>
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                </a>
-              )}
-            </nav>
+            nextLesson ? (
+              <a href={`/${slug}/${nextLesson.id.split('/').pop()}`}
+                 class="flex items-center gap-3.5 mt-9 p-3.5 bg-dark-card border border-dark-border rounded-[14px] hover:border-primary transition-colors cursor-pointer group">
+                <span class="w-9 h-9 rounded-full bg-primary/10 border-[1.5px] border-dark-border flex items-center justify-center text-[13px] font-semibold text-primary shrink-0 group-hover:border-primary">
+                  {currentIndex + 2}
+                </span>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[11px] text-gray-dark">ถัดไป</div>
+                  <div class="text-[14px] font-semibold group-hover:text-primary transition-colors truncate">{nextLesson.data.title}</div>
+                </div>
+                <span class="text-gray-dark text-[18px] ml-auto shrink-0 group-hover:text-primary">→</span>
+              </a>
+            ) : (
+              <a href="/"
+                 class="flex items-center gap-3.5 mt-9 p-3.5 bg-dark-card border border-dark-border rounded-[14px] hover:border-primary transition-colors cursor-pointer group">
+                <span class="w-9 h-9 rounded-full bg-green/10 border-[1.5px] border-dark-border flex items-center justify-center text-[13px] font-semibold text-green shrink-0">
+                  ✓
+                </span>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[11px] text-gray-dark">จบคอร์ส</div>
+                  <div class="text-[14px] font-semibold group-hover:text-primary transition-colors">กลับหน้า Room</div>
+                </div>
+                <span class="text-gray-dark text-[18px] ml-auto shrink-0 group-hover:text-primary">→</span>
+              </a>
+            )
           )}
         </div>
       </div>
