@@ -1,43 +1,45 @@
-# Astro Starter Kit: Minimal
+# Room
 
-```sh
-npm create astro@latest -- --template minimal
+Personal learning platform — online courses and lessons for trading education.
+
+## Tech Stack
+
+- [Astro](https://astro.build/) v6 (static output)
+- [MDX](https://mdxjs.com/) for content (courses + lessons)
+- [Tailwind CSS](https://tailwindcss.com/) v4
+- [astro-embed](https://github.com/delucis/astro-embed) for video embeds
+
+## Content Structure
+
+Content is organized as MDX collections:
+
+- `src/content/courses/` — course definitions (title, description, tags, type)
+- `src/content/lessons/` — individual lessons linked to courses (with optional video)
+
+Course types: `learn` (knowledge) and `learn-tool` (tool-specific guides).
+
+## Development
+
+```bash
+npm install
+npm run dev        # dev server at localhost:4321
+npm run build      # static build to dist/
+npm run preview    # preview production build
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Requires Node.js >= 22.12.0.
 
-## 🚀 Project Structure
+## Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+src/
+  content/         # MDX content collections
+    courses/       # course frontmatter + content
+    lessons/       # lesson frontmatter + content
+  components/      # Astro/UI components
+  layouts/         # page layouts
+  pages/           # route pages
+  styles/          # global styles
+  content.config.ts
+public/            # static assets
+```
