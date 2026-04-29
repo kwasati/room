@@ -12,7 +12,9 @@ Free forex education platform under IntensiveTrader brand (Thai language)
   - `src/pages/index.astro` — homepage with course grid, filter (all/learn/learn-tool), inline lesson content for single-lesson courses
   - `src/pages/[slug].astro` — course detail with lesson list (multi-lesson courses only, single-lesson redirects to homepage)
   - `src/pages/[slug]/[lesson].astro` — individual lesson page
-- **Components:** `src/components/` — TopBar, Layout, BrokerCTA, CourseCard, LessonNav (all `.astro`)
+- **Components:** `src/components/` — TopBar, BrokerCTA, CourseCard, LessonNav (all `.astro`)
+- **Layouts:** `src/layouts/Layout.astro` — page wrapper with TopBar + footer
+- **Content config:** `src/content.config.ts` — Astro Content Collections schema (courses + lessons, glob loader)
 - **Styling:** `src/styles/global.css` — Tailwind + custom dark theme, Inter + Noto Sans Thai fonts
 - **Deploy:** static build, sub-app pattern (build -> copy to intensivetrader.com)
 - **Build:** `npm run build` (astro build)
