@@ -4,7 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 // content port จาก intensivetrader.com/src/pages/ea/gdbasket.astro (เดิม)
 const MAIN = 'https://intensivetrader.com';
 const JOURNAL = 'https://journal.intensivetrader.com/';
-const DL_LATEST = `${MAIN}/d/gdbasket`; // ปุ่มหลัก — redirect ชี้ไฟล์รุ่นล่าสุด v3.10 (publish/releases/v3.10/gdBasket_v3.10.ex5)
+const DL_LATEST = `${MAIN}/d/gdbasket`; // ปุ่มหลัก — redirect ชี้ไฟล์รุ่นล่าสุด v3.11 (publish/releases/v3.11/gdBasket_v3.11.ex5)
+const DL_V310 = `${MAIN}/d/gdbasket-v310`;
 const DL_V3092 = `${MAIN}/d/gdbasket-v3092`;
 const DL_V202 = `${MAIN}/d/gdbasket-v202`;
 const DL_V201 = `${MAIN}/d/gdbasket-v201`;
@@ -80,7 +81,8 @@ const veloceSteps = [
 ];
 
 const releases = [
-  { version: 'v3.10', dateLabel: '22 ส.ค. 2026', latest: true, url: DL_LATEST },
+  { version: 'v3.11', dateLabel: '10 ก.ย. 2026', latest: true, url: DL_LATEST },
+  { version: 'v3.10', dateLabel: '22 ส.ค. 2026', latest: false, url: DL_V310 },
   { version: 'v3.092', dateLabel: '19 ส.ค. 2026', latest: false, url: DL_V3092 },
   { version: 'v2.02', dateLabel: '13 ก.ค. 2026', latest: false, url: DL_V202 },
   { version: 'v2.01', dateLabel: '10 ก.ค. 2026', latest: false, url: DL_V201 },
@@ -96,14 +98,14 @@ const fileRows = [
   { icon: 'modes', name: 'เครื่องยนต์ VELOCE', note: 'ค่าพร้อมใช้ที่ผ่านการทดสอบมาแล้ว · ไม่ต้องเลือกโหมด', meta: 'พร้อมใช้', href: '#modes', color: 'text-primary' },
   { icon: 'star', name: 'จุดเด่น', note: 'Adaptive Grid / Market Temperature / PPTS / Common-TP', meta: 'อ่าน', href: '#features', color: 'text-primary' },
   { icon: 'risk', name: 'ความเสี่ยงที่ต้องรู้', note: 'Buy Grid · Capital · เงินค้ำ · ข้อจำกัดก่อนใช้', meta: 'สำคัญ', href: '#risk', color: 'text-secondary' },
-  { icon: 'clock', name: 'Releases', note: 'v3.10 · v3.092 · v2.02 · v2.01 · v2.00 · v1.37 · v1.18', meta: '7 rel', href: '/ea/gdbasket/changelog', color: 'text-gray' },
+  { icon: 'clock', name: 'Releases', note: 'v3.11 · v3.10 · v3.092 · v2.02 · v2.01 · v2.00 · v1.37 · v1.18', meta: '8 rel', href: '/ea/gdbasket/changelog', color: 'text-gray' },
   { icon: 'calc', name: 'วางแผนเงิน Rolling Capital', note: 'เครื่องคิดเลขถอน/ทบจากผลจริงย้อนหลัง', meta: 'ลองเลย', href: '/ea/gdbasket/rolling-capital', color: 'text-secondary' },
-  { icon: 'dl', name: 'gdBasket v3.10', note: 'พร้อมใช้ · โหลดฟรี', meta: 'ดาวน์โหลด', href: DL_LATEST, color: 'text-green', download: true },
+  { icon: 'dl', name: 'gdBasket v3.11', note: 'พร้อมใช้ · โหลดฟรี', meta: 'ดาวน์โหลด', href: DL_LATEST, color: 'text-green', download: true },
   { icon: 'journal', name: 'Trading Journal', note: 'ผลเทรดจริงรายวัน · กำไร/ขาดทุนต่อรอบ', meta: 'ดูประวัติ', href: JOURNAL, color: 'text-primary', accent: true },
 ];
 
 const installSteps = [
-  'ดาวน์โหลดไฟล์ <strong>gdBasket v3.10</strong> จากปุ่มด้านบน',
+  'ดาวน์โหลดไฟล์ <strong>gdBasket v3.11</strong> จากปุ่มด้านบน',
   'เปิด <strong>MetaTrader 5</strong> → <strong>File → Open Data Folder</strong>',
   'วางไฟล์ในโฟลเดอร์ <code class="install-path">MQL5 → Experts</code>',
   'ปิดเปิด MT5 ใหม่ หรือกด <strong>Refresh</strong> ใน Navigator',
@@ -113,7 +115,7 @@ const installSteps = [
 
 ---
 
-<Layout title="gdBasket — Adaptive Buy Grid Behavior EA · GOLD M15 | Room" description="EA เทรดทองคำด้วยระบบ Adaptive Grid Behavior ปรับพฤติกรรมตามความผันผวนตลาดเองอัตโนมัติ เสริมด้วย Peak Profit Trail System เก็บกำไรเก่ง ใช้ Common-TP/SL วางจริงที่โบรก ถึงเป้าปิดให้เองแม้ไม่ได้เปิดเครื่อง — VELOCE ผ่านพิสูจน์ 3 ปี 6 เดือน — โหลดฟรี v3.10" ogImage="https://room.intensivetrader.com/gdbasket-og.png" ogImageWidth={1200} ogImageHeight={630}>
+<Layout title="gdBasket — Adaptive Buy Grid Behavior EA · GOLD M15 | Room" description="EA เทรดทองคำด้วยระบบ Adaptive Grid Behavior ปรับพฤติกรรมตามความผันผวนตลาดเองอัตโนมัติ เสริมด้วย Peak Profit Trail System เก็บกำไรเก่ง ใช้ Common-TP/SL วางจริงที่โบรก ถึงเป้าปิดให้เองแม้ไม่ได้เปิดเครื่อง — VELOCE ผ่านพิสูจน์ 3 ปี 6 เดือน — โหลดฟรี v3.11" ogImage="https://room.intensivetrader.com/gdbasket-og.png" ogImageWidth={1200} ogImageHeight={630}>
 <div id="main-content" class="repo-page">
   <div class="repo-shell max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -135,7 +137,7 @@ const installSteps = [
           <p>Adaptive Buy Grid Behavior EA · GOLD M15</p>
         </div>
       </div>
-      <div class="repo-version"><span>เวอร์ชัน</span><strong>v3.10</strong></div>
+      <div class="repo-version"><span>เวอร์ชัน</span><strong>v3.11</strong></div>
     </header>
 
     <!-- (c) SUB-NAV TABS -->
@@ -154,7 +156,7 @@ const installSteps = [
       </a>
       <a href="/ea/gdbasket/changelog">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Releases <span>7</span>
+        Releases <span>8</span>
       </a>
       <a href={JOURNAL}>Trading Journal</a>
     </nav>
@@ -167,17 +169,17 @@ const installSteps = [
         <div class="repo-toolbar">
           <div class="branch-pill">
             <svg class="w-4 h-4 text-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v10m0-10a2 2 0 100-4 2 2 0 000 4zm0 10a2 2 0 100 4 2 2 0 000-4zm8-6a2 2 0 100-4 2 2 0 000 4zm0 0v1a3 3 0 01-3 3H9"/></svg>
-            <strong>v3.10</strong>
+            <strong>v3.11</strong>
           </div>
           <span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"/></svg>
-            <strong>7</strong> เวอร์ชัน
+            <strong>8</strong> เวอร์ชัน
           </span>
           <a href={DL_LATEST} download class="repo-download compact">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            ดาวน์โหลดฟรี <span>v3.10</span>
+            ดาวน์โหลดฟรี <span>v3.11</span>
           </a>
-          <p>ไฟล์รุ่น <strong>v3.10</strong> — ใช้ได้เฉพาะบัญชี <strong>XM</strong> (ทองคำ ไทม์เฟรม M15) ล็อกไว้ในตัว EA</p>
+          <p>ไฟล์รุ่น <strong>v3.11</strong> — ใช้ได้เฉพาะบัญชี <strong>XM</strong> (ทองคำ ไทม์เฟรม M15) ล็อกไว้ในตัว EA</p>
         </div>
 
         <!-- (e) FILE BROWSER -->
@@ -185,8 +187,8 @@ const installSteps = [
           <div class="commit-row">
             <img src={`${MAIN}/profile.jpg`} class="commit-avatar" alt="" />
             <strong>IntensiveTrader</strong>
-            <p>v3.10 — เปลี่ยนระบบการคำนวณ Lot แบบเร่งรอบ ทุกขนาดทุนได้ lot แรกเท่ากันหมด</p>
-            <time>อัปเดตไฟล์ 22 ส.ค. 2026</time>
+            <p>v3.11 — ปิดจุดเสี่ยงสะสมครบ 10 รายการ ผลเทรดเท่าเดิมกับ v3.10 ทุกแถว</p>
+            <time>อัปเดตไฟล์ 10 ก.ย. 2026</time>
           </div>
           <div class="file-list">
             {fileRows.map((row) => (
@@ -524,9 +526,9 @@ const installSteps = [
         <section id="changelog" class="release-card scroll-mt-20">
           <div>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <strong>อัปเดตล่าสุด — v3.10</strong>
+            <strong>อัปเดตล่าสุด — v3.11</strong>
           </div>
-          <p><strong>เปลี่ยนระบบการคำนวณ Lot แบบเร่งรอบ</strong> — แก้เคสทุนบางก้อน (เช่น 300) ที่เคยได้ lot แรกใหญ่กว่าปกติ ต่อไปนี้ทุกขนาดทุนได้ lot แรกเท่ากันหมด + EA ปรับไปใช้ระบบคันโยกแบบเร่งรอบ กำไรของรอบครบ 44% เพิ่ม lot อัตโนมัติแล้วเร่งรอบต่อ มีปุ่มเปิด/ปิดได้</p>
+          <p><strong>ปิดจุดเสี่ยงสะสมครบ 10 รายการ</strong> — ปรับปรุงความปลอดภัยและความถูกต้องของระบบภายใน: ขาพีระมิดได้จุดตัดขาดทุนจากตัวไล่ล็อกกำไรให้เอง, เพิ่มจุดตัดสำรองสำหรับบัญชีทุนใหญ่, แก้ตัวนับรอบ/ยุคตอนรีสตาร์ท, ตรวจซ่อมจุดปิดกำไร/ตัดขาดทุนหลังรีสตาร์ทให้ครบขึ้น, ตัวตรวจสอบตัวเองของ ATR แม่นขึ้น, ลบคอลัมน์ log ที่ไม่ใช้แล้วออก — ผลเทรดที่ค่าตั้งต้นเท่ากับ v3.10 ทุกตัวเลข (ทดสอบเต็มเส้น 2020-2026 ตรงทุกแถว)</p>
           <a href="/ea/gdbasket/changelog" class="text-primary text-sm font-semibold hover:underline px-4 pb-4 inline-block">ดูประวัติทุกเวอร์ชัน →</a>
         </section>
       </div>
